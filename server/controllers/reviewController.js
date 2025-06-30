@@ -1,38 +1,35 @@
-
 const Review = require('../models/Review');
 
-// Add a new review
 exports.addReview = async (req, res) => {
-  const { movie, rating, comment } = req.body;
-
+  const { movieId, rating, comment } = req.body;
   try {
     const review = new Review({
-      user: req.user._id,
-      movie,
+      user: req.user.id,
+      movieId,
       rating,
-      comment
+      comment,
     });
-
-    const saved = await review.save();
-    res.status(201).json(saved);
+    await review.save();
+    res.status(201).json({ message: 'Review saved' });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to add review' });
+    res.status(500).json({ error: 'Failed to submit review' });
   }
 };
 
-// Get all reviews for a specific movie
-exports.getReviewsByMovie = async (req, res) => {
-  const { movieId } = req.params;
-
+exports.getMovieReviews = async (req, res) => {
   try {
-    const reviews = await Review.find({ movie: movieId })
-      .populate('user', 'username')
-      .sort('-createdAt');
-
+    const reviews = await Review.find({ movieId: req.params.movieId }).populate('user', 'username');
     res.json(reviews);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch reviews' });
+    res.status(500).json({ error: 'Failed to get reviews' });
   }
 };
 
-//
+exports.getUserReviews = async (req, res) => {
+  try {
+    const reviews = await Review.find({ user: req.user.id });
+    res.json(reviews);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch user reviews' });
+  }
+};
