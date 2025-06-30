@@ -1,21 +1,38 @@
-# Node modules
+# Node.js
 node_modules/
 .env
 .env.local
+.env.development
+.env.production
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 dist/
 build/
+coverage/
 
 # Logs
-logs
+logs/
 *.log
 
-# IDE & OS files
+# OS files
 .DS_Store
-.vscode/
-*.swp
-*.swo
+Thumbs.db
 
-# Optional for React/Vite
-client/.next/
-client/.turbo/
-client/.vercel/
+# Vercel
+.vercel/
+
+# Next.js
+.next/
+out/
+
+# Editor config
+.vscode/
+.idea/
+*.swp
+
+# React build
+client/build/
+
+# MongoDB dump
+dump/
