@@ -50,79 +50,63 @@ movie-recommendation-app/ ├── client/            # Next.js frontend │   
 git clone https://github.com/your-username/movie-recommendation-app.git
 cd movie-recommendation-app
 
-2. Setup Environment
+ ` 
+### 2. Setup Environment
+ 
+#### 🧪 `.env.example` → `.env` (for both frontend and backend)
+ `# Server (Express) PORT=5000 MONGODB_URI=mongodb+srv://your-db-uri JWT_SECRET=your_jwt_secret TMDB_API_KEY=your_tmdb_api_key `  
+## 🔃 Run Locally
+ 
+### Backend (Express)
+ `cd server npm install npm run dev ` 
+### Frontend (Next.js)
+ `cd client npm install npm run dev `  
+## ☁️ Deployment
+ 
+### 🔹 Frontend → [Vercel](https://vercel.com)
+ 
+ 
+- Connect GitHub repo
+ 
+- Add environment variables under Settings > Environment Variables
+ 
 
-🧪 .env.example → .env (for both frontend and backend)
+ 
+### 🔹 Backend → [Render](https://render.com)
+ 
+ 
+- Create Web Service
+ 
+- Add environment variables
+ 
+- Use build command: `npm install`
+ 
+- Start command: `node server.js` or `npm start`
+ 
 
-# Server (Express)
-PORT=5000
-MONGODB_URI=mongodb+srv://your-db-uri
-JWT_SECRET=your_jwt_secret
-TMDB_API_KEY=your_tmdb_api_key
-
-
----
-
-🔃 Run Locally
-
-Backend (Express)
-
-cd server
-npm install
-npm run dev
-
-Frontend (Next.js)
-
-cd client
-npm install
-npm run dev
-
-
----
-
-☁️ Deployment
-
-🔹 Frontend → Vercel
-
-Connect GitHub repo
-
-Add environment variables under Settings > Environment Variables
-
-
-🔹 Backend → Render
-
-Create Web Service
-
-Add environment variables
-
-Use build command: npm install
-
-Start command: node server.js or npm start
-
-
-
----
-
-🧪 Stretch Goals Implemented
-
-✅ Follow other users
-
-✅ Share watchlists
-
-✅ Advanced movie recommendations
-
-✅ Movie trailer integration
-
-✅ Custom watchlists
-
-✅ Pagination, fallback UI
-
-✅ SEO-ready pages
+  
+## 🧪 Stretch Goals Implemented
+ 
+ 
+- ✅ Follow other users
+ 
+- ✅ Share watchlists
+ 
+- ✅ Advanced movie recommendations
+ 
+- ✅ Movie trailer integration
+ 
+- ✅ Custom watchlists
+ 
+- ✅ Pagination, fallback UI
+ 
+- ✅ SEO-ready pages
+ 
 
   
 ## 🧑‍💻 Authors
  
-**Temitope Kulogun** 
+**Temitope Kulogun** Project guided and reviewed with assistance from [ChatGPT](https://openai.com/chatgpt)
   
 ## 📜 License
  
