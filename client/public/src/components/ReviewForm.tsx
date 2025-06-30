@@ -41,4 +41,3 @@ const ReviewForm = ({ movieId, onReviewSubmitted }) => {
 
 export default ReviewForm;
 
-
