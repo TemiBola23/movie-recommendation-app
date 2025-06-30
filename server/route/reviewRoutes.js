@@ -1,31 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/authMiddleware');
-const Review = require('../models/Review');
+const {
+  addReview,
+  getReviewsByMovie,
+  getUserReviews
+} = require('../controllers/reviewController');
+const authMiddleware = require('../middleware/authMiddleware');
 
-// Post a review
-router.post('/', auth, async (req, res) => {
-  try {
-    const review = await Review.create({
-      userId: req.user.id,
-      movieId: req.body.movieId,
-      rating: req.body.rating,
-      comment: req.body.comment
-    });
-    res.status(201).json(review);
-  } catch (err) {
-    res.status(500).json({ message: 'Error posting review' });
-  }
-});
+// Public route to get all reviews for a specific movie
+router.get('/movie/:movieId', getReviewsByMovie);
 
-// Get reviews for a movie
-router.get('/:movieId', async (req, res) => {
-  try {
-    const reviews = await Review.find({ movieId: req.params.movieId }).populate('userId', 'username');
-    res.json(reviews);
-  } catch (err) {
-    res.status(500).json({ message: 'Error fetching reviews' });
-  }
-});
+// Authenticated routes
+router.post('/', authMiddleware, addReview);
+router.get('/user', authMiddleware, getUserReviews);
 
 module.exports = router;
