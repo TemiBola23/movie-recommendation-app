@@ -1,64 +1,53 @@
-'use client';
-
+// Register.tsx
 import React, { useState } from 'react';
-import { register } from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../services/api';
 
-const Register: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+const Register = () => {
+  const [form, setForm] = useState({ username: '', email: '', password: '' });
+  const [message, setMessage] = useState('');
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-
-    try {
-      await register({ username, email, password });
-      navigate('/login');
-    } catch (err) {
-      setError('Registration failed. Please try again.');
-    }
+    const res = await registerUser(form);
+    setMessage(res.message || 'Registration complete');
   };
 
   return (
-    <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Create Account</h2>
-      {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
-      <form onSubmit={handleRegister} className="space-y-4">
+    <div className="p-4 max-w-md mx-auto">
+      <h2 className="text-2xl font-bold mb-4">Register</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           type="text"
+          name="username"
           placeholder="Username"
-          className="w-full px-3 py-2 border rounded"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          className="p-2 border rounded"
+          onChange={handleChange}
           required
         />
         <input
           type="email"
+          name="email"
           placeholder="Email"
-          className="w-full px-3 py-2 border rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          className="p-2 border rounded"
+          onChange={handleChange}
           required
         />
         <input
           type="password"
+          name="password"
           placeholder="Password"
-          className="w-full px-3 py-2 border rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          className="p-2 border rounded"
+          onChange={handleChange}
           required
         />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
+        <button type="submit" className="bg-blue-600 text-white p-2 rounded">
           Register
         </button>
       </form>
+      {message && <p className="mt-2 text-green-600">{message}</p>}
     </div>
   );
 };
