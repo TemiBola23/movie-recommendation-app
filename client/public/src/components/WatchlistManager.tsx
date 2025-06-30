@@ -1,62 +1,49 @@
+// WatchlistManager.tsx
 import React, { useEffect, useState } from 'react';
-import { addToWatchlist, fetchWatchlist } from '../services/api';
+import { getWatchlist, removeFromWatchlist } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
-interface Props {
-  movie: {
-    id: number;
-    title: string;
-    poster_path: string;
-    release_date: string;
-  };
-}
-
-const WatchlistManager: React.FC<Props> = ({ movie }) => {
-  const token = localStorage.getItem('token');
-  const [inWatchlist, setInWatchlist] = useState(false);
+const WatchlistManager = () => {
+  const { token } = useAuth();
+  const [watchlist, setWatchlist] = useState([]);
 
   useEffect(() => {
-    const checkWatchlist = async () => {
-      if (!token) return;
-      const list = await fetchWatchlist(token);
-      const found = list?.some((m: any) => m.id === movie.id);
-      setInWatchlist(found);
+    const fetchWatchlist = async () => {
+      const data = await getWatchlist(token);
+      setWatchlist(data);
     };
-    checkWatchlist();
-  }, [movie.id, token]);
+    if (token) fetchWatchlist();
+  }, [token]);
 
-  const handleAdd = async () => {
-    if (!token) {
-      alert('Please login to add movies to your watchlist.');
-      return;
-    }
-
-    try {
-      await addToWatchlist(token, movie);
-      setInWatchlist(true);
-    } catch (err) {
-      console.error('Error adding to watchlist:', err);
-    }
+  const handleRemove = async (id) => {
+    await removeFromWatchlist(id, token);
+    setWatchlist((prev) => prev.filter((m) => m.id !== id));
   };
 
   return (
-    <div className="mt-2">
-      {inWatchlist ? (
-        <button
-          className="bg-gray-400 text-white px-3 py-1 rounded cursor-not-allowed"
-          disabled
-        >
-          In Watchlist
-        </button>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">My Watchlist</h2>
+      {watchlist.length === 0 ? (
+        <p className="text-gray-500">No movies in your watchlist.</p>
       ) : (
-        <button
-          className="bg-purple-600 text-white px-3 py-1 rounded"
-          onClick={handleAdd}
-        >
-          Add to Watchlist
-        </button>
+        <ul className="space-y-2">
+          {watchlist.map((movie) => (
+            <li key={movie.id} className="flex justify-between border p-2 rounded">
+              <span>{movie.title}</span>
+              <button
+                onClick={() => handleRemove(movie.id)}
+                className="text-red-500 hover:underline"
+              >
+                Remove
+              </button>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
 };
 
 export default WatchlistManager;
+
+
