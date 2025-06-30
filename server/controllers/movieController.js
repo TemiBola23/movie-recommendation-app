@@ -1,30 +1,80 @@
-
 const axios = require('axios');
+const Review = require('../models/Review');
+const User = require('../models/User');
 
-// Existing search, details, genres...
+const TMDB_API = 'https://api.themoviedb.org/3';
+const TMDB_KEY = process.env.TMDB_API_KEY;
 
-// Discover movies with filters and pagination
-const discoverMovies = async (req, res) => {
-  const { genre, minRating, year, page = 1 } = req.query;
-  const params = {
-    api_key: process.env.TMDB_API_KEY,
-    sort_by: 'popularity.desc',
-    include_adult: false,
-    page,
-  };
-  if (genre) params.with_genres = genre;
-  if (minRating) params['vote_average.gte'] = minRating;
-  if (year) {
-    params['primary_release_date.gte'] = `${year}-01-01`;
-    params['primary_release_date.lte'] = `${year}-12-31`;
-  }
+// Search movies by title, genre, etc.
+exports.searchMovies = async (req, res) => {
+  const { query } = req.query;
   try {
-    const resp = await axios.get('https://api.themoviedb.org/3/discover/movie', { params });
-    res.json({ results: resp.data.results, totalPages: resp.data.total_pages });
+    const response = await axios.get(`${TMDB_API}/search/movie`, {
+      params: {
+        api_key: TMDB_KEY,
+        query
+      }
+    });
+    res.json(response.data.results);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Discover failed' });
+    res.status(500).json({ error: 'Failed to fetch movies' });
   }
 };
 
-module.exports = { searchMovies, getMovieDetails, getGenres, discoverMovies };
+// Discover trending/popular movies
+exports.discoverMovies = async (req, res) => {
+  const { genre, sort_by = 'popularity.desc', page = 1 } = req.query;
+
+  try {
+    const response = await axios.get(`${TMDB_API}/discover/movie`, {
+      params: {
+        api_key: TMDB_KEY,
+        with_genres: genre,
+        sort_by,
+        page
+      }
+    });
+    res.json(response.data.results);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to discover movies' });
+  }
+};
+
+// Get detailed movie information
+exports.getMovieDetails = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await axios.get(`${TMDB_API}/movie/${id}`, {
+      params: { api_key: TMDB_KEY }
+    });
+    res.json(response.data);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to get movie details' });
+  }
+};
+
+// Get personalized recommendations
+exports.getRecommendations = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const reviewScores = await Review.find({ user: user._id }).sort('-rating').limit(5);
+    const topMovies = reviewScores.map(r => r.movie).slice(0, 3);
+    const favorites = user.favorites.slice(0, 3);
+
+    const ids = [...new Set([...topMovies, ...favorites])];
+
+    const promises = ids.map(id =>
+      axios.get(`${TMDB_API}/movie/${id}/recommendations`, {
+        params: { api_key: TMDB_KEY }
+      })
+    );
+
+    const results = (await Promise.all(promises))
+      .flatMap(res => res.data.results)
+      .slice(0, 12);
+
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to get recommendations' });
+  }
+};
