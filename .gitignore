@@ -1,20 +1,21 @@
-
-```bash
-# dependencies
+# Node modules
 node_modules/
-
-# builds
-build/
-dist/
-
-# dotenv
 .env
+.env.local
+dist/
+build/
 
-# logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Logs
+logs
+*.log
 
-# system files
+# IDE & OS files
 .DS_Store
-Thumbs.db
+.vscode/
+*.swp
+*.swo
+
+# Optional for React/Vite
+client/.next/
+client/.turbo/
+client/.vercel/
