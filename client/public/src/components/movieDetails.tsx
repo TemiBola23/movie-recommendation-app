@@ -1,57 +1,50 @@
 // MovieDetails.tsx
 import React, { useEffect, useState } from 'react';
-import { fetchMovieDetails } from '../services/api';
+import { getMovieDetails, getReviewsByMovie } from '../services/api';
 
-interface Props {
-  movieId: number;
-}
-
-const MovieDetails: React.FC<Props> = ({ movieId }) => {
-  const [movie, setMovie] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+const MovieDetails = ({ movieId }) => {
+  const [movie, setMovie] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    const getMovie = async () => {
-      setLoading(true);
-      try {
-        const data = await fetchMovieDetails(movieId);
-        setMovie(data);
-      } catch (error) {
-        console.error('Failed to load movie details:', error);
-      } finally {
-        setLoading(false);
-      }
+    const fetchDetails = async () => {
+      const data = await getMovieDetails(movieId);
+      setMovie(data);
     };
-    getMovie();
+
+    const fetchReviews = async () => {
+      const data = await getReviewsByMovie(movieId);
+      setReviews(data);
+    };
+
+    fetchDetails();
+    fetchReviews();
   }, [movieId]);
 
-  if (loading) return <p>Loading movie details...</p>;
-  if (!movie) return <p>No details available.</p>;
-
-  const trailer = movie.videos?.results?.find(
-    (vid: any) => vid.type === 'Trailer' && vid.site === 'YouTube'
-  );
+  if (!movie) return <p className="text-center">Loading movie details...</p>;
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold">{movie.title}</h2>
-      <p className="mb-2 text-gray-600">{movie.overview}</p>
-      <p className="text-sm text-gray-400">Release Date: {movie.release_date}</p>
-      {trailer && (
+      <h2 className="text-2xl font-bold mb-2">{movie.title}</h2>
+      <p className="mb-1 text-gray-700">{movie.overview}</p>
+      <p className="text-sm text-gray-500">Release Date: {movie.release_date}</p>
+      <p className="text-sm text-gray-500">Rating: {movie.vote_average}</p>
+
+      {movie.trailer && (
         <div className="mt-4">
-          <h3 className="font-semibold mb-2">Watch Trailer:</h3>
+          <h3 className="font-semibold mb-2">Trailer:</h3>
           <iframe
             width="100%"
             height="315"
-            src={`https://www.youtube.com/embed/${trailer.key}`}
-            title="Movie Trailer"
+            src={`https://www.youtube.com/embed/${movie.trailer}`}
+            title="Trailer"
             frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
         </div>
       )}
-    </div>
-  );
-};
 
-export default MovieDetails;
+      <div className="mt-6">
+        <h3 className="text-xl font-semibold mb-2">Reviews</h3>
+        {
