@@ -1,23 +1,28 @@
 // WatchlistManager.tsx
 import React, { useEffect, useState } from 'react';
-import { getWatchlist, removeFromWatchlist } from '../services/api';
+import { getWatchlist, removeFromWatchlist } from '../services/api'; // Assume these functions interact with your API
 import { useAuth } from '../context/AuthContext';
 
-const WatchlistManager = () => {
+const WatchlistManager: React.FC = () => {
   const { token } = useAuth();
-  const [watchlist, setWatchlist] = useState([]);
+  const [watchlist, setWatchlist] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchWatchlist = async () => {
       const data = await getWatchlist(token);
       setWatchlist(data);
     };
-    if (token) fetchWatchlist();
+
+    if (token) {
+      fetchWatchlist();
+    }
   }, [token]);
 
-  const handleRemove = async (id) => {
-    await removeFromWatchlist(id, token);
-    setWatchlist((prev) => prev.filter((m) => m.id !== id));
+  const handleRemove = async (movieId: number) => {
+    await removeFromWatchlist(movieId, token);
+    setWatchlist((prevWatchlist) =>
+      prevWatchlist.filter((movie) => movie.id !== movieId)
+    );
   };
 
   return (
@@ -28,7 +33,7 @@ const WatchlistManager = () => {
       ) : (
         <ul className="space-y-2">
           {watchlist.map((movie) => (
-            <li key={movie.id} className="flex justify-between border p-2 rounded">
+            <li key={movie.id} className="flex justify-between items-center">
               <span>{movie.title}</span>
               <button
                 onClick={() => handleRemove(movie.id)}
@@ -45,5 +50,3 @@ const WatchlistManager = () => {
 };
 
 export default WatchlistManager;
-
-
