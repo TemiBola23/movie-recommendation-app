@@ -1,136 +1,178 @@
-
 # 🎬 Movie Recommendation App
 
-A fullstack movie recommendation platform built with **React**, **Express.js**, **MongoDB**, and the **TMDB API**. Users can register, search movies, save favorites, rate and review, and manage personal watchlists.
+A full-featured movie recommendation platform where users can discover, search, rate, and save their favorite movies. Built with a fullstack architecture using **React**, **Express.js**, **MongoDB**, and integrated with the **TMDB API**.
 
 ---
 
-## 🚀 Features
+## 🚀 Live Demo
 
-### 🔐 Authentication
-- User registration and login
-- Secure password handling with bcrypt
-- JWT-based authentication
-
-### 🎞️ Movie Discovery
-- Search by title, genre, year
-- Filter by rating and release date
-- View detailed movie info
-- Personalized recommendations
-
-### 🙍 User Functionality
-- Save favorite movies
-- Create custom watchlists
-- Rate and review movies
-- Manage user profile
+🌐 [View Live Demo](https://nkd.in/dwXMQWS7)
 
 ---
 
-## 🛠️ Tech Stack
+## 🎯 Learning Objectives
 
-| Frontend         | Backend            | Database  | External API | Deployment      |
-|------------------|--------------------|-----------|---------------|------------------|
-| React + Tailwind | Express.js + JWT   | MongoDB   | TMDB API      | Netlify & Render |
+- ✅ Connect frontend (React) and backend (Express) systems
+- ✅ Implement secure JWT authentication flows
+- ✅ Deploy fullstack applications using **Render** and **Vercel**
+- ✅ Work with real-world external APIs like **TMDB**
+
+---
+
+## 🛠 Tech Stack
+
+| Tech         | Usage                           |
+|--------------|----------------------------------|
+| React + Vite | Frontend (with Tailwind + shadcn/ui) |
+| Express.js   | Backend API and auth system      |
+| MongoDB      | Database for users & reviews     |
+| JWT          | Secure token-based authentication |
+| TMDB API     | Real-time movie data             |
+| Render       | Backend deployment               |
+| Vercel       | Frontend deployment              |
+
+---
+
+## ✨ Features
+
+### ✅ Core
+
+- 🔐 User Authentication (JWT, hashed passwords)
+- 🔍 Movie Discovery by genre, rating, popularity
+- 🎞️ View detailed movie info (poster, rating, description)
+- 🌟 Personalized watchlist with persistent storage
+- 📝 User movie reviews with rating and comments
+- 🧑 Profile management with review history
+- 📱 Fully responsive modern UI
+
+### 🧠 Advanced
+
+- 🧪 Real-time TMDB search + filtering
+- 📄 Pagination support
+- 🧬 Content-based recommendation algorithm
+- 🎥 Movie trailer integration
+- 🧩 Modular React component architecture
 
 ---
 
 ## 📁 Project Structure
 
-movie-recommendation-app/
-├── client/
-│   ├── public/
-│   └── src/
-│       ├── components/
-│       │   ├── MovieSearch.js
-│       │   ├── MovieDetails.js
-│       │   ├── ReviewForm.js
-│       │   ├── Register.js
-│       │   ├── Login.js
-│       │   └── UserProfile.js
-│       ├── services/api.js
-│       ├── index.css
-│       └── App.js
-├── server/
-│   ├── controllers/
-│   │   ├── movieController.js
-│   │   ├── authController.js
-│   │   └── reviewController.js
-│   ├── middleware/authMiddleware.js
-│   ├── models/User.js
-│   ├── models/Review.js
-│   ├── routes/authRoutes.js
-│   ├── routes/movieRoutes.js
-│   ├── routes/userRoutes.js
-│   ├── routes/reviewRoutes.js
-│   ├── .env.example
-│   └── server.js
-├── .gitignore
-└── README.md
+movie-recommendation-app/ ├── client/ │   └── src/ │       ├── components/         # React UI components │       ├── services/           # API requests │       ├── App.tsx             # Routing & layout │       └── index.css           # Tailwind CSS ├── server/ │   ├── controllers/            # Logic for auth, movies, reviews │   ├── middleware/             # JWT verification │   ├── models/                 # Mongoose schemas │   ├── routes/                 # Express route files │   ├── server.js               # App entry point │   └── .env.example            # Environment config sample ├── .gitignore └── README.md
 
-
--
 ---
 
-## ⚙️ Setup Instructions
+## 🔧 Setup Instructions
 
-### 🔧 1. Backend Setup
+### 📦 Prerequisites
+
+- Node.js 18+
+- MongoDB Atlas account (or local MongoDB)
+- TMDB API Key (from [themoviedb.org](https://www.themoviedb.org/))
+
+---
+
+### 🧪 Local Development
+
 ```bash
-cd server
-npm install
-cp .env.example .env
-# Fill in MONGO_URI, JWT_SECRET, TMDB_API_KEY
-npm run dev
+# 1. Clone repo
+git clone https://github.com/yourusername/movie-recommendation-app
+cd movie-recommendation-app
 
-💻 2. Frontend Setup
+# 2. Set up environment variables
+cp server/.env.example server/.env
 
-cd client
-npm install
-npm run dev
+# 3. Install server & client
+cd server && npm install
+cd ../client && npm install
 
+# 4. Start both servers
+# Terminal 1
+cd server && npm run dev
 
----
-
-🧪 Testing
-
-Use Postman to test routes like /api/auth/register, /api/movies/discover, /api/reviews.
-
-Use React DevTools to inspect components and state.
-
+# Terminal 2
+cd client && npm run dev
 
 
 ---
 
-📡 Deployment
+☁️ Deployment
 
-**Frontend**: [Netlify](https://www.netlify.com/) or [Vercel](https://vercel.com/)
- 
-- **Backend**: [Render](https://render.com/) or [Heroku](https://heroku.com/)
- 
+🟦 Backend (Render)
+
+Connect your GitHub repo
+
+Add environment variables:
+
+PORT
+
+MONGO_URI
+
+JWT_SECRET
+
+TMDB_API_KEY
+
+
+Build Command: npm install
+
+Start Command: node server.js
+
+
+🟩 Frontend (Vercel)
+
+Import from GitHub
+
+Set build command: npm run build
+
+Output directory: dist
+
 
 
 ---
 
-📌 Environment Variables
+📚 API Endpoints
 
-PORT=5000
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret_key
-TMDB_API_KEY=your_tmdb_api_key
+Auth
+
+POST /api/auth/register
+
+POST /api/auth/login
+
+GET /api/auth/profile
+
+
+TMDB
+
+GET /api/tmdb/search?query=...&page=...
+
+GET /api/tmdb/discover?sort_by=...&page=...
+
+
+Reviews
+
+POST /api/reviews
+
+GET /api/reviews/movie/:id
+
+GET /api/reviews/user
+
 
 
 ---
 
-🧠 Stretch Goals
+✅ Stretch Goals
 
-Social features (follow users, share lists)
+👥 Social features (follow users, share watchlists)
 
-Advanced recommendation algorithm
+🧠 Enhanced AI movie recommendation engine
 
-Movie trailer integration (YouTube)
+🎥 Trailer previews and modal popups
+
 
 
 ---
 
-👨‍💻 Author
+📝 License
 
-Built as a fullstack capstone project by [Kulogun Temitope]
+MIT © 2025 [Kulogun Temitope Bolatito]
+
+---
