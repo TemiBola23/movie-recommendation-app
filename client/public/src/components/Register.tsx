@@ -51,9 +51,3 @@ const Register = () => {
 export default Register;
 
 
-✅ Login.tsx created!
-
-Next: I’ll generate Register.tsx, ReviewForm.tsx, WatchlistManager.tsx, MovieSearch.tsx, and Pagination.tsx.
-
-Shall I continue generating the next one now?
-
