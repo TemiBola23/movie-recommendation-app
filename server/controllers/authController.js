@@ -1,38 +1,64 @@
-const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const User = require('../models/User');
 
-const generateToken = (user) => {
-  return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '2h' });
+// Generate JWT token
+const generateToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+    expiresIn: '7d'
+  });
 };
 
+// Register a new user
 exports.register = async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
-    const existing = await User.findOne({ email });
-    if (existing) return res.status(400).json({ message: 'User already exists' });
+  const { username, email, password } = req.body;
 
-    const hashed = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, email, password: hashed });
-    const token = generateToken(user);
-    res.status(201).json({ token, user });
+  try {
+    const userExists = await User.findOne({ email });
+    if (userExists) return res.status(400).json({ error: 'Email already registered' });
+
+    const user = await User.create({ username, email, password });
+    const token = generateToken(user._id);
+
+    res.status(201).json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      token
+    });
   } catch (err) {
-    res.status(500).json({ message: 'Registration failed', error: err.message });
+    res.status(500).json({ error: 'Registration failed' });
   }
 };
 
+// Login user
 exports.login = async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const { email, password } = req.body;
     const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
 
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ message: 'Invalid credentials' });
-
-    const token = generateToken(user);
-    res.json({ token, user });
+    const token = generateToken(user._id);
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      token
+    });
   } catch (err) {
-    res.status(500).json({ message: 'Login failed', error: err.message });
+    res.status(500).json({ error: 'Login failed' });
+  }
+};
+
+// Get logged-in user's profile
+exports.getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('-password');
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch profile' });
   }
 };
