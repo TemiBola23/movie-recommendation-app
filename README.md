@@ -1,5 +1,4 @@
- 
- `# 🎬 Movie Recommendation App
+# 🎬 Movie Recommendation App
 
 A fullstack web application for discovering, searching, saving, and sharing your favorite movies — powered by the TMDB API, JWT authentication, and real-time recommendations.
 
