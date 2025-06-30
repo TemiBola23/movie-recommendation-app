@@ -1,178 +1,68 @@
-# 🎬 Movie Recommendation App
-
-A full-featured movie recommendation platform where users can discover, search, rate, and save their favorite movies. Built with a fullstack architecture using **React**, **Express.js**, **MongoDB**, and integrated with the **TMDB API**.
-
----
-
-## 🚀 Live Demo
-
-🌐 [View Live Demo](https://nkd.in/dwXMQWS7)
-
----
-
-## 🎯 Learning Objectives
-
-- ✅ Connect frontend (React) and backend (Express) systems
-- ✅ Implement secure JWT authentication flows
-- ✅ Deploy fullstack applications using **Render** and **Vercel**
-- ✅ Work with real-world external APIs like **TMDB**
-
----
-
-## 🛠 Tech Stack
-
-| Tech         | Usage                           |
-|--------------|----------------------------------|
-| React + Vite | Frontend (with Tailwind + shadcn/ui) |
-| Express.js   | Backend API and auth system      |
-| MongoDB      | Database for users & reviews     |
-| JWT          | Secure token-based authentication |
-| TMDB API     | Real-time movie data             |
-| Render       | Backend deployment               |
-| Vercel       | Frontend deployment              |
-
----
-
-## ✨ Features
-
-### ✅ Core
-
-- 🔐 User Authentication (JWT, hashed passwords)
-- 🔍 Movie Discovery by genre, rating, popularity
-- 🎞️ View detailed movie info (poster, rating, description)
-- 🌟 Personalized watchlist with persistent storage
-- 📝 User movie reviews with rating and comments
-- 🧑 Profile management with review history
-- 📱 Fully responsive modern UI
-
-### 🧠 Advanced
-
-- 🧪 Real-time TMDB search + filtering
-- 📄 Pagination support
-- 🧬 Content-based recommendation algorithm
-- 🎥 Movie trailer integration
-- 🧩 Modular React component architecture
-
----
-
-## 📁 Project Structure
-
-movie-recommendation-app/ ├── client/ │   └── src/ │       ├── components/         # React UI components │       ├── services/           # API requests │       ├── App.tsx             # Routing & layout │       └── index.css           # Tailwind CSS ├── server/ │   ├── controllers/            # Logic for auth, movies, reviews │   ├── middleware/             # JWT verification │   ├── models/                 # Mongoose schemas │   ├── routes/                 # Express route files │   ├── server.js               # App entry point │   └── .env.example            # Environment config sample ├── .gitignore └── README.md
-
----
-
-## 🔧 Setup Instructions
-
-### 📦 Prerequisites
-
-- Node.js 18+
-- MongoDB Atlas account (or local MongoDB)
-- TMDB API Key (from [themoviedb.org](https://www.themoviedb.org/))
-
----
-
-### 🧪 Local Development
-
-```bash
-# 1. Clone repo
-git clone https://github.com/yourusername/movie-recommendation-app
-cd movie-recommendation-app
-
-# 2. Set up environment variables
-cp server/.env.example server/.env
-
-# 3. Install server & client
-cd server && npm install
-cd ../client && npm install
-
-# 4. Start both servers
-# Terminal 1
-cd server && npm run dev
-
-# Terminal 2
-cd client && npm run dev
-
-
----
-
-☁️ Deployment
-
-🟦 Backend (Render)
-
-Connect your GitHub repo
-
-Add environment variables:
-
-PORT
-
-MONGO_URI
-
-JWT_SECRET
-
-TMDB_API_KEY
-
-
-Build Command: npm install
-
-Start Command: node server.js
-
-
-🟩 Frontend (Vercel)
-
-Import from GitHub
-
-Set build command: npm run build
-
-Output directory: dist
-
-
-
----
-
-📚 API Endpoints
-
-Auth
-
-POST /api/auth/register
-
-POST /api/auth/login
-
-GET /api/auth/profile
-
-
-TMDB
-
-GET /api/tmdb/search?query=...&page=...
-
-GET /api/tmdb/discover?sort_by=...&page=...
-
-
-Reviews
-
-POST /api/reviews
-
-GET /api/reviews/movie/:id
-
-GET /api/reviews/user
-
-
-
----
-
-✅ Stretch Goals
-
-👥 Social features (follow users, share watchlists)
-
-🧠 Enhanced AI movie recommendation engine
-
-🎥 Trailer previews and modal popups
-
-
-
----
-
-📝 License
-
-MIT © 2025 [Kulogun Temitope Bolatito]
-
----
+ 
+ `# 🎬 Movie Recommendation App  
+ 
+ A fullstack web application for discovering, searching, saving, and sharing your favorite movies — powered by the TMDB API, JWT authentication, and real-time recommendations.  ## 🚀 Live Demo  🌐 [Live on Vercel](https://your-vercel-domain.vercel.app)  ---  
+ 
+ ## 🧩 Features  ### 🔐 User Authentication - JWT-based secure authentication - User registration & login - Password encryption (bcrypt)  ### 🔎 Movie Discovery - Search movies by title, genre, or year - Filter by rating, release date, popularity - View detailed info & trailers - Personalized recommendations  ### 📌 User Features - Save favorite movies - Create & manage custom watchlists - Rate and review movies - User profile with following & sharing  ### 🧠 Technical Highlights - **Frontend**: Next.js 14 (App Router), Tailwind CSS, shadcn/ui, TypeScript - **Backend**: Express.js + MongoDB + Mongoose - **External API**: [TMDB API](https://www.themoviedb.org/) - **Auth**: JWT, bcrypt, context-based state management - **SEO**: Metadata, OG tags, structured content - **UI**: Fully responsive, mobile-first, accessible  ---  ## 📁 Project Structure  ` 
+movie-recommendation-app/ ├── client/            # Next.js frontend │   ├── public/ │   └── src/ │       ├── components/ │       │   ├── Login.tsx, Register.tsx, MovieSearch.tsx, etc. │       ├── pages/ │       ├── services/api.ts │       ├── context/AuthContext.tsx │       └── styles/index.css ├── server/            # Express backend │   ├── controllers/ │   ├── models/ │   ├── routes/ │   ├── middleware/ │   ├── .env.example │   └── server.js ├── .gitignore └── README.md
+ ` ---  ## 🛠️ Installation  ### 1. Clone & install  ```bash git clone https://github.com/your-username/movie-recommendation-app.git cd movie-recommendation-app ` 
+### 2. Setup Environment
+ 
+#### 🧪 `.env.example` → `.env` (for both frontend and backend)
+ `# Server (Express) PORT=5000 MONGODB_URI=mongodb+srv://your-db-uri JWT_SECRET=your_jwt_secret TMDB_API_KEY=your_tmdb_api_key `  
+## 🔃 Run Locally
+ 
+### Backend (Express)
+ `cd server npm install npm run dev ` 
+### Frontend (Next.js)
+ `cd client npm install npm run dev `  
+## ☁️ Deployment
+ 
+### 🔹 Frontend → [Vercel](https://vercel.com)
+ 
+ 
+- Connect GitHub repo
+ 
+- Add environment variables under Settings > Environment Variables
+ 
+
+ 
+### 🔹 Backend → [Render](https://render.com)
+ 
+ 
+- Create Web Service
+ 
+- Add environment variables
+ 
+- Use build command: `npm install`
+ 
+- Start command: `node server.js` or `npm start`
+ 
+
+  
+## 🧪 Stretch Goals Implemented
+ 
+ 
+- ✅ Follow other users
+ 
+- ✅ Share watchlists
+ 
+- ✅ Advanced movie recommendations
+ 
+- ✅ Movie trailer integration
+ 
+- ✅ Custom watchlists
+ 
+- ✅ Pagination, fallback UI
+ 
+- ✅ SEO-ready pages
+ 
+
+  
+## 🧑‍💻 Authors
+ 
+**Temitope Kulogun** Project guided and reviewed with assistance from [ChatGPT](https://openai.com/chatgpt)
+  
+## 📜 License
+ 
+MIT License
