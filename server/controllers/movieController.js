@@ -1,52 +1,45 @@
 const axios = require('axios');
+const User = require('../models/User');
 
-const TMDB = axios.create({
-  baseURL: 'https://api.themoviedb.org/3',
-  params: { api_key: process.env.TMDB_API_KEY, language: 'en-US' },
-});
+const TMDB_BASE = 'https://api.themoviedb.org/3';
+const API_KEY = process.env.TMDB_API_KEY;
 
 exports.search = async (req, res) => {
   try {
-    const { query, page = 1 } = req.query;
-    const endpoint = query ? '/search/movie' : '/discover/movie';
-    const params = { page };
-    if (query) params.query = query;
+    const { query, genre, sort_by, page = 1 } = req.query;
+    const url = query
+      ? `${TMDB_BASE}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}`
+      : `${TMDB_BASE}/discover/movie?api_key=${API_KEY}&sort_by=${sort_by || 'popularity.desc'}&with_genres=${genre || ''}&page=${page}`;
 
-    const tmdbRes = await TMDB.get(endpoint, { params });
-    res.json({
-      movies: tmdbRes.data.results,
-      totalPages: tmdbRes.data.total_pages,
-    });
-  } catch (err) {
-    res.status(500).json({ message: 'Search failed' });
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch {
+    res.status(500).json({ message: 'Movie search failed' });
   }
 };
 
 exports.details = async (req, res) => {
   try {
-    const { id } = req.params;
-    const tmdbRes = await TMDB.get(`/movie/${id}`, {
-      params: { append_to_response: 'videos,credits' },
-    });
-    const movie = tmdbRes.data;
-    const trailer = movie.videos?.results.find(
-      (v) => v.site === 'YouTube' && v.type === 'Trailer'
-    )?.key;
-    res.json({ ...movie, trailer });
+    const movieId = req.params.id;
+    const response = await axios.get(`${TMDB_BASE}/movie/${movieId}?api_key=${API_KEY}&append_to_response=videos`);
+    res.json(response.data);
   } catch {
-    res.status(500).json({ message: 'Fetch details failed' });
+    res.status(500).json({ message: 'Movie details failed' });
   }
 };
 
 exports.recommendations = async (req, res) => {
   try {
-    const userId = req.user.id;
-    const watchedRes = await TMDB.get('/discover/movie', {
-      params: { sort_by: 'popularity.desc', page: 1 },
-    });
-    const recs = watchedRes.data.results.slice(0, 10);
-    res.json(recs);
+    const user = await User.findById(req.user.id);
+    const watchlistMovies = user.watchlists.flatMap((list) => list.movies);
+
+    if (watchlistMovies.length === 0) return res.json({ results: [] });
+
+    const randomMovie = watchlistMovies[Math.floor(Math.random() * watchlistMovies.length)];
+
+    const response = await axios.get(`${TMDB_BASE}/movie/${randomMovie}/recommendations?api_key=${API_KEY}`);
+    res.json(response.data);
   } catch {
-    res.status(500).json({ message: 'Recs failed' });
+    res.status(500).json({ message: 'Recommendations failed' });
   }
 };
