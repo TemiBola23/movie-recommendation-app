@@ -1,63 +1,20 @@
-// api.ts
-const BACKEND_API = process.env.NEXT_PUBLIC_API_URL;
-const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+// api.js const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
 
-export const fetchMovies = async (
-  query: string,
-  filters: { genre?: string; rating?: string; year?: string }
-) => {
-  const searchParam = query ? `&query=${query}` : '';
-  const genreParam = filters.genre ? `&with_genres=${filters.genre}` : '';
-  const ratingParam = filters.rating ? `&vote_average.gte=${filters.rating}` : '';
-  const yearParam = filters.year ? `&primary_release_year=${filters.year}` : '';
+export const register = async (data) => { const res = await fetch(${BASE_URL}/api/auth/register, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), }); return res.json(); };
 
-  const url = `${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&sort_by=popularity.desc${searchParam}${genreParam}${ratingParam}${yearParam}`;
+export const login = async (data) => { const res = await fetch(${BASE_URL}/api/auth/login, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), }); return res.json(); };
 
-  const res = await fetch(url);
-  const data = await res.json();
-  return data.results || [];
-};
+export const getUserProfile = async (token) => { const res = await fetch(${BASE_URL}/api/users/profile, { headers: { Authorization: Bearer ${token}, }, }); return res.json(); };
 
-export const fetchMovieDetails = async (id: number) => {
-  const url = `${TMDB_BASE_URL}/movie/${id}?api_key=${TMDB_API_KEY}&append_to_response=videos`;
-  const res = await fetch(url);
-  return await res.json();
-};
+export const searchMovies = async (query, page = 1) => { const res = await fetch(${BASE_URL}/api/movies/search?query=${encodeURIComponent(query)}&page=${page}); return res.json(); };
 
-export const registerUser = async (credentials: any) => {
-  const res = await fetch(`${BACKEND_API}/auth/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(credentials),
-  });
-  return await res.json();
-};
+export const getMovieDetails = async (id) => { const res = await fetch(${BASE_URL}/api/movies/details/${id}); return res.json(); };
 
-export const loginUser = async (credentials: any) => {
-  const res = await fetch(`${BACKEND_API}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(credentials),
-  });
-  return await res.json();
-};
+export const addToWatchlist = async (movie, token) => { const res = await fetch(${BASE_URL}/api/users/watchlist, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: Bearer ${token}, }, body: JSON.stringify(movie), }); return res.json(); };
 
-export const fetchWatchlist = async (token: string) => {
-  const res = await fetch(`${BACKEND_API}/user/watchlist`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return await res.json();
-};
+export const removeFromWatchlist = async (id, token) => { const res = await fetch(${BASE_URL}/api/users/watchlist/${id}, { method: 'DELETE', headers: { Authorization: Bearer ${token}, }, }); return res.json(); };
 
-export const addToWatchlist = async (token: string, movie: any) => {
-  const res = await fetch(`${BACKEND_API}/user/watchlist`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(movie),
-  });
-  return await res.json();
-};
+export const getRecommendations = async (token) => { const res = await fetch(${BASE_URL}/api/movies/recommendations, { headers: { Authorization: Bearer ${token}, }, }); return res.json(); };
+
+export const submitReview = async (movieId, review, token) => { const res = await fetch(${BASE_URL}/api/reviews/${movieId}, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: Bearer ${token}, }, body: JSON.stringify(review), }); return res.json(); };
+
