@@ -1,55 +1,59 @@
 // Register.tsx
 import React, { useState } from 'react';
-import { registerUser } from '../services/api';
+import { register } from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  const [form, setForm] = useState({ username: '', email: '', password: '' });
-  const [message, setMessage] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await registerUser(form);
-    setMessage(res.message || 'Registration complete');
+    const res = await register({ username, email, password });
+    if (res.message === 'User created') {
+      navigate('/login');
+    }
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Register</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <div className="p-4 max-w-sm mx-auto">
+      <h2 className="text-xl font-semibold mb-4">Register</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
-          name="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           placeholder="Username"
-          className="p-2 border rounded"
-          onChange={handleChange}
-          required
+          className="w-full border p-2 rounded"
         />
         <input
           type="email"
-          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
-          className="p-2 border rounded"
-          onChange={handleChange}
-          required
+          className="w-full border p-2 rounded"
         />
         <input
           type="password"
-          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          className="p-2 border rounded"
-          onChange={handleChange}
-          required
+          className="w-full border p-2 rounded"
         />
-        <button type="submit" className="bg-blue-600 text-white p-2 rounded">
-          Register
-        </button>
+        <button className="bg-green-500 text-white px-4 py-2 rounded">Register</button>
       </form>
-      {message && <p className="mt-2 text-green-600">{message}</p>}
     </div>
   );
 };
 
 export default Register;
+
+
+✅ Login.tsx created!
+
+Next: I’ll generate Register.tsx, ReviewForm.tsx, WatchlistManager.tsx, MovieSearch.tsx, and Pagination.tsx.
+
+Shall I continue generating the next one now?
+
