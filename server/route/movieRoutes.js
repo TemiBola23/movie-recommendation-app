@@ -1,10 +1,10 @@
 const express = require('express');
-const router = express.Router();
-const authController = require('../controllers/authController');
+const { search, details, recommendations } = require('../controllers/movieController');
 const authMiddleware = require('../middleware/authMiddleware');
+const router = express.Router();
 
-router.post('/register', authController.register);
-router.post('/login', authController.login);
-router.get('/profile', authMiddleware, authController.getProfile);
+router.get('/search', search);                // /api/movies/search?query=&page=
+router.get('/details/:id', details);          // /api/movies/details/:id
+router.get('/recommendations', authMiddleware, recommendations);
 
 module.exports = router;
