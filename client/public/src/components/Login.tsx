@@ -1,56 +1,52 @@
-'use client';
-
+// Login.tsx
 import React, { useState } from 'react';
-import { login } from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../services/api';
 
-const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+const Login = () => {
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [message, setMessage] = useState('');
+  const [token, setToken] = useState('');
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-
-    try {
-      const res = await login({ email, password });
-      localStorage.setItem('token', res.data.token);
-      navigate('/profile');
-    } catch (err) {
-      setError('Invalid email or password');
+    const res = await loginUser(form);
+    if (res.token) {
+      setMessage('Login successful!');
+      setToken(res.token);
+      localStorage.setItem('token', res.token);
+    } else {
+      setMessage(res.message || 'Login failed');
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded shadow">
+    <div className="p-4 max-w-md mx-auto">
       <h2 className="text-2xl font-bold mb-4">Login</h2>
-      {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
-      <form onSubmit={handleLogin} className="space-y-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           type="email"
+          name="email"
           placeholder="Email"
-          className="w-full px-3 py-2 border rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          className="p-2 border rounded"
+          onChange={handleChange}
           required
         />
         <input
           type="password"
+          name="password"
           placeholder="Password"
-          className="w-full px-3 py-2 border rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          className="p-2 border rounded"
+          onChange={handleChange}
           required
         />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Sign In
+        <button type="submit" className="bg-green-600 text-white p-2 rounded">
+          Login
         </button>
       </form>
+      {message && <p className="mt-2 text-blue-600">{message}</p>}
     </div>
   );
 };
