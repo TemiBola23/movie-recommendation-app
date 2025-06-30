@@ -4,26 +4,22 @@ const reviewSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
   },
-  movie: {
-    type: Number, // TMDB movie ID
-    required: true
+  movieId: {
+    type: String,
+    required: true,
   },
   rating: {
     type: Number,
     min: 0,
     max: 10,
-    required: true
+    required: true,
   },
   comment: {
     type: String,
-    maxlength: 1000
+    maxlength: 1000,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Review', reviewSchema);
