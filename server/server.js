@@ -15,7 +15,8 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
-
+const movieRoutes = require('./routes/movieRoutes');
+app.use('/api/movies', movieRoutes);
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
