@@ -1,101 +1,73 @@
 # 🎬 Movie Recommendation App
 
-A fullstack app that allows users to discover, search, and manage their favorite movies. Built with React, Express, MongoDB, and TMDB API.
+A full-featured movie recommendation platform where users can discover, search, and save their favorite movies.
 
-## 🚀 Features
+## 🔑 Features
 
-- 🔐 JWT authentication (register/login)
-- 🔍 Movie search, filter, and discovery using TMDB API
-- ⭐ Rate, review, and favorite movies
-- 📚 Custom watchlists per user
-- 🧠 Personalized recommendations
-- 👥 Follow users & share watchlists
-- 🎥 Movie trailer integration
-- 📱 Responsive design (mobile + desktop)
+- 🔐 **User Authentication** (JWT-based login/register)
+- 🎞️ **Movie Discovery** with filtering by title, genre, rating, and popularity
+- ⭐ **Personalized Recommendations** based on user activity
+- 📝 **User Reviews** and custom watchlists
+- 📱 **Mobile-Responsive UI** with TailwindCSS and shadcn/ui
+- 📦 **Integration with TMDB API** for real-time movie data
+- 📽️ **Movie Trailer Embeds**
+- 👥 **Social Features** (Follow and Share)
+- 🚀 **CI/CD** with Vercel + Render deployment
 
-## 🛠 Tech Stack
+## 🧠 Tech Stack
 
-- **Frontend:** React (Vite + TS), Tailwind CSS, shadcn/ui, Lucide Icons
-- **Backend:** Node.js + Express
-- **Database:** MongoDB (Mongoose)
-- **API Integration:** [TMDB](https://developer.themoviedb.org)
-- **Auth:** JWT
-- **Deployment:** Vercel (frontend), Render (backend)
+- **Frontend:** Next.js 14, TypeScript, Tailwind CSS, shadcn/ui, Lucide Icons
+- **Backend:** Express.js, Node.js, MongoDB, JWT, Mongoose
+- **APIs:** [TMDB API](https://www.themoviedb.org/documentation/api)
+- **Deployment:** Vercel (Frontend), Render (Backend)
 
 ## 🌐 Live Demo
 
-[🔗 View Live App](https://your-clean-domain.vercel.app)
+Check out the live app: [https://movie-app-demo.vercel.app](https://movie-app-demo.vercel.app)
 
-## 🧪 Environment Setup
+## 🚀 Getting Started
 
-Create `.env` files for both frontend and backend:
+### 1. Clone the Repo
+```bash
+git clone https://github.com/yourusername/movie-recommendation-app.git
+cd movie-recommendation-app
+```
 
-### `client/.env.example`
-```env
-VITE_TMDB_API_KEY=your_tmdb_key
-VITE_BACKEND_URL=http://localhost:5000
+### 2. Setup Environment Variables
 
-server/.env.example
+Create `.env` files in `server/` and `client/` using `.env.example` as template.
 
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/movieapp
-JWT_SECRET=your_jwt_secret
-TMDB_API_KEY=your_tmdb_key
+### 3. Run Locally
 
-🧾 Scripts
-
-# Client
-cd client
+```bash
+# In server/
 npm install
 npm run dev
 
-# Server
-cd server
+# In client/
 npm install
 npm run dev
+```
 
-📦 Deployment
+## 🛠️ Vercel Configuration
 
-Frontend → Vercel
+This `vercel.json` ensures Vercel deploys the frontend and routes API calls to the backend.
 
-Backend → Render (with MongoDB Atlas)
+## 📁 Project Structure
 
-✅ Project Structure 
-
+```
 movie-recommendation-app/
-├── client/
-│   └── src/
-│       ├── components/
-│       │   ├── MovieSearch.tsx
-│       │   ├── MovieDetails.tsx
-│       │   ├── Login.tsx
-│       │   ├── Register.tsx
-│       │   ├── UserProfile.tsx
-│       │   ├── WatchlistManager.tsx
-│       │   ├── ReviewForm.tsx
-│       │   └── Navbar.tsx
-│       ├── services/
-│       │   └── api.js
-│       ├── index.tsx
-│       ├── App.tsx
-│       └── index.css
-├── server/
-│   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── movieController.js
-│   │   └── reviewController.js
-│   ├── middleware/
-│   │   └── authMiddleware.js
-│   ├── models/
-│   │   ├── User.js
-│   │   └── Review.js
-│   ├── routes/
-│   │   ├── authRoutes.js
-│   │   ├── movieRoutes.js
-│   │   ├── userRoutes.js
-│   │   └── reviewRoutes.js
-│   ├── server.js
-│   └── .env.example
-├── .gitignore
+├── client/         # Next.js frontend
+├── server/         # Express.js backend
+├── vercel.json     # Deployment config
 └── README.md
----
+```
+
+## 🧪 Testing
+
+- Backend: Postman for API routes
+- Frontend: Cypress, Playwright or React Testing Library
+
+## 👥 Authors
+
+- Temibola23 — [GitHub](https://github.com/Temibola23)
