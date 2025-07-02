@@ -36,10 +36,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/reviews', reviewRoutes);
 
 // Health check
-app.get('/', (req, res) => {
+app.gemt('/', (req, res) => {
   res.send('🎬 Movie Recommendation API running successfully.');
 });
-
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
