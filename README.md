@@ -4,8 +4,15 @@ A fullstack web application for discovering, searching, saving, and sharing your
 
 ## 🚀 Live Demo
 
-🌐 [Live on Vercel](https://your-vercel-domain.vercel.app)
+Frontend: [https://movie-app.vercel.app](https://movie-app.vercel.app)  
+Backend: [https://movie-api.onrender.com](https://movie-api.onrender.com)
 
+## 📦 Tech Stack
+
+- Next.js 14 + TypeScript
+- Tailwind CSS + shadcn/ui
+- Express.js + MongoDB
+- TMDB API for movie data
 ---
 
 ## 🧩 Features
