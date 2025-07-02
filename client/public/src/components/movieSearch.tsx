@@ -1,133 +1,50 @@
-// client/src/components/MovieSearch.tsx
 import React, { useEffect, useState } from 'react';
-import MovieCard from './MovieCard';
-import api from '../services/api';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const MovieSearch: React.FC = () => {
-  const [movies, setMovies] = useState<any[]>([]);
+  const [movies, setMovies] = useState([]);
   const [query, setQuery] = useState('');
-  const [genre, setGenre] = useState('');
-  const [rating, setRating] = useState('');
-  const [sortBy, setSortBy] = useState('popularity.desc');
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [filter, setFilter] = useState('popularity.desc');
 
-  // Fetch movies from TMDB
   const fetchMovies = async () => {
-    setLoading(true);
     try {
-      const params: any = {
-        query,
-        page,
-        sort_by: sortBy,
-        with_genres: genre || undefined,
-        'vote_average.gte': rating || undefined,
-      };
-
-      const endpoint = query
-        ? '/search/movie'
-        : '/discover/movie';
-
-      const res = await api.get(endpoint, { params });
-      setMovies(res.data.results || []);
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-    } finally {
-      setLoading(false);
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/movies/discover`, {
+        params: { query, sort_by: filter }
+      });
+      setMovies(res.data);
+    } catch (err) {
+      console.error('Error fetching movies', err);
     }
   };
 
   useEffect(() => {
     fetchMovies();
-  }, [query, genre, rating, sortBy, page]);
+  }, [query, filter]);
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">Discover Movies</h1>
-
-      {/* Search & Filters */}
-      <div className="flex flex-wrap gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Search movies..."
-          className="w-full sm:w-64 p-2 border rounded"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-
-        <select
-          className="p-2 border rounded"
-          value={genre}
-          onChange={(e) => setGenre(e.target.value)}
-        >
-          <option value="">All Genres</option>
-          <option value="28">Action</option>
-          <option value="35">Comedy</option>
-          <option value="18">Drama</option>
-          <option value="10749">Romance</option>
-          <option value="27">Horror</option>
-        </select>
-
-        <select
-          className="p-2 border rounded"
-          value={rating}
-          onChange={(e) => setRating(e.target.value)}
-        >
-          <option value="">Min Rating</option>
-          <option value="8">8+</option>
-          <option value="7">7+</option>
-          <option value="6">6+</option>
-          <option value="5">5+</option>
-        </select>
-
-        <select
-          className="p-2 border rounded"
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-        >
-          <option value="popularity.desc">Popularity</option>
-          <option value="release_date.desc">Newest</option>
-          <option value="vote_average.desc">Top Rated</option>
-        </select>
-      </div>
-
-      {/* Movie Cards */}
-      {loading ? (
-        <p className="text-center text-gray-500">Loading movies...</p>
-      ) : movies.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {movies.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              id={movie.id}
-              title={movie.title}
-              overview={movie.overview}
-              poster_path={movie.poster_path}
-              release_date={movie.release_date}
-              vote_average={movie.vote_average}
-            />
-          ))}
-        </div>
-      ) : (
-        <p className="text-center text-gray-400 mt-10">No movies found.</p>
-      )}
-
-      {/* Pagination */}
-      <div className="flex justify-center mt-6 gap-4">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage(page - 1)}
-          className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
-        >
-          Prev
-        </button>
-        <span className="text-gray-700 mt-2">Page {page}</span>
-        <button
-          onClick={() => setPage(page + 1)}
-          className="px-4 py-2 bg-blue-600 text-white rounded"
-        >
-          Next
-        </button>
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">Discover Movies</h2>
+      <input
+        type="text"
+        placeholder="Search by title or genre"
+        className="border p-2 rounded w-full mb-4"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <select className="mb-4 p-2 border rounded" onChange={(e) => setFilter(e.target.value)}>
+        <option value="popularity.desc">Most Popular</option>
+        <option value="release_date.desc">Newest Releases</option>
+        <option value="vote_average.desc">Top Rated</option>
+      </select>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {movies.map((movie: any) => (
+          <Link to={`/movie/${movie.id}`} key={movie.id} className="bg-white rounded shadow p-2">
+            <img src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`} alt={movie.title} />
+            <h3 className="text-sm font-semibold mt-2">{movie.title}</h3>
+            <p className="text-xs text-gray-600">{movie.release_date}</p>
+          </Link>
+        ))}
       </div>
     </div>
   );
