@@ -1,38 +1,27 @@
-# Node.js
+# Node modules
 node_modules/
-.env
-.env.local
-.env.development
-.env.production
+dist/
+build/
+
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-dist/
-build/
-coverage/
 
-# Logs
-logs/
-*.log
+# dotenv environment variables
+.env
+.env.local
+.env.*.local
 
-# OS files
+# IDE settings
+.vscode/
+.idea/
 .DS_Store
-Thumbs.db
 
-# Vercel
+# Build output
 .vercel/
-
-# Next.js
 .next/
 out/
 
-# Editor config
-.vscode/
-.idea/
-*.swp
-
-# React build
-client/build/
-
-# MongoDB dump
-dump/
+# OS files
+Thumbs.db
