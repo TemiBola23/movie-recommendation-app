@@ -1,61 +1,97 @@
-Certainly! Let's proceed with the next component: MovieSearch.tsx.
+// client/src/components/MovieSearch.tsx
+import React, { useState } from 'react';
+import axios from 'axios';
 
-
----
-
-🎬 MovieSearch.tsx
-
-This component enables users to search for movies and view the results with pagination.
-
-// MovieSearch.tsx
-import React, { useState, useEffect } from 'react';
-import { fetchMovies } from '../services/api'; // Assume this function fetches movies with pagination
-import Pagination from './Pagination';
+interface Movie {
+  id: number;
+  title: string;
+  overview: string;
+  poster_path: string;
+  release_date: string;
+  vote_average: number;
+}
 
 const MovieSearch: React.FC = () => {
-  const [movies, setMovies] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [query, setQuery] = useState('');
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    const loadMovies = async () => {
-      const data = await fetchMovies(searchTerm, currentPage);
-      setMovies(data.movies);
-      setTotalPages(data.totalPages);
-    };
+  const handleSearch = async () => {
+    if (!query) return;
 
-    if (searchTerm) {
-      loadMovies();
+    setLoading(true);
+    setError('');
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/movies/search`,
+        {
+          params: { query },
+        }
+      );
+      setMovies(response.data);
+    } catch (err) {
+      setError('Failed to fetch movies. Please try again.');
+    } finally {
+      setLoading(false);
     }
-  }, [searchTerm, currentPage]);
+  };
 
   return (
-    <div>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Search for movies..."
-        className="border p-2 rounded"
-      />
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+    <div className="max-w-4xl mx-auto px-4 py-6">
+      <h2 className="text-2xl font-bold mb-4">Search Movies</h2>
+
+      <div className="flex gap-2 mb-4">
+        <input
+          type="text"
+          placeholder="Enter movie title"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+        />
+        <button
+          onClick={handleSearch}
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+        >
+          Search
+        </button>
+      </div>
+
+      {loading && <p className="text-blue-600">Loading...</p>}
+      {error && <p className="text-red-600">{error}</p>}
+
+      <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
         {movies.map((movie) => (
-          <div key={movie.id} className="p-2 bg-white shadow rounded">
-            <img src={movie.poster} alt={movie.title} className="w-full h-auto rounded" />
-            <h3 className="text-sm font-semibold mt-2">{movie.title}</h3>
+          <div
+            key={movie.id}
+            className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition"
+          >
+            {movie.poster_path ? (
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+                className="w-full h-72 object-cover"
+              />
+            ) : (
+              <div className="w-full h-72 bg-gray-300 flex items-center justify-center text-gray-600">
+                No Image
+              </div>
+            )}
+            <div className="p-4">
+              <h3 className="text-lg font-semibold mb-2">{movie.title}</h3>
+              <p className="text-sm text-gray-600 line-clamp-3">
+                {movie.overview}
+              </p>
+              <div className="text-sm text-gray-500 mt-2">
+                Release: {movie.release_date || 'N/A'} | Rating:{' '}
+                {movie.vote_average}
+              </div>
+            </div>
           </div>
         ))}
       </div>
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
     </div>
   );
 };
 
 export default MovieSearch;
-
-
