@@ -1,73 +1,30 @@
-// client/src/components/Navbar.tsx
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react'; // using Lucide icons
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const toggleNav = () => {
-    setIsOpen(!isOpen);
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   return (
-    <nav className="bg-blue-700 text-white shadow">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex justify-between items-center py-4">
-          <Link to="/" className="text-xl font-bold tracking-tight">
-            🎬 MovieApp
-          </Link>
-          <div className="hidden md:flex space-x-6">
-            <Link to="/" className="hover:text-gray-200">
-              Discover
-            </Link>
-            <Link to="/watchlist" className="hover:text-gray-200">
-              Watchlist
-            </Link>
-            <Link to="/profile" className="hover:text-gray-200">
-              Profile
-            </Link>
-            <Link to="/login" className="hover:text-gray-200">
-              Login
-            </Link>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button onClick={toggleNav}>
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile menu items */}
-        {isOpen && (
-          <div className="md:hidden flex flex-col space-y-3 pb-4">
-            <Link to="/" onClick={toggleNav} className="hover:text-gray-200">
-              Discover
-            </Link>
-            <Link
-              to="/watchlist"
-              onClick={toggleNav}
-              className="hover:text-gray-200"
-            >
-              Watchlist
-            </Link>
-            <Link
-              to="/profile"
-              onClick={toggleNav}
-              className="hover:text-gray-200"
-            >
-              Profile
-            </Link>
-            <Link
-              to="/login"
-              onClick={toggleNav}
-              className="hover:text-gray-200"
-            >
-              Login
-            </Link>
-          </div>
+    <nav className="bg-white shadow p-4 flex justify-between items-center">
+      <div className="text-xl font-bold text-blue-600">
+        <Link to="/">🎬 MovieApp</Link>
+      </div>
+      <div className="space-x-4">
+        <Link to="/" className="text-gray-700 hover:text-blue-500">Home</Link>
+        <Link to="/watchlist" className="text-gray-700 hover:text-blue-500">Watchlist</Link>
+        <Link to="/profile" className="text-gray-700 hover:text-blue-500">Profile</Link>
+        {localStorage.getItem('token') ? (
+          <button onClick={handleLogout} className="text-red-500 hover:underline">Logout</button>
+        ) : (
+          <>
+            <Link to="/login" className="text-gray-700 hover:text-blue-500">Login</Link>
+            <Link to="/register" className="text-gray-700 hover:text-blue-500">Register</Link>
+          </>
         )}
       </div>
     </nav>
